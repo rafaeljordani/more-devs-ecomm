@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:more_devs_do_zero/shared/app_colors.dart';
-import 'package:more_devs_do_zero/shared/app_text_style.dart';
+import 'package:vaicorinthians/pages/shared/app_colors.dart';
+import 'package:vaicorinthians/pages/shared/app_text_style.dart';
 
 class AppRequiredPassword extends StatelessWidget {
   const AppRequiredPassword({
@@ -23,7 +23,7 @@ class AppRequiredPassword extends StatelessWidget {
         SizedBox(width: 20),
         Text(
           text,
-          style: atendido ? AppTextStyle.smallGreen : AppTextStyle.smallGrey,
+          style: atendido ? AppTextStyle.buttonLabel : AppTextStyle.title,
         ),
       ],
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:more_devs_do_zero/features/login/controllers/login_controller.dart';
-import 'package:more_devs_do_zero/shared/app_text_style.dart';
+import 'package:vaicorinthians/features/login/controllers/login_controller.dart';
+// import 'package:vaicorinthians/features/login/controllers/login_controller.dart';
+import 'package:vaicorinthians/shared/app_text_style.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:more_devs_do_zero/shared/app_colors.dart';
-import 'package:more_devs_do_zero/shared/app_text_style.dart';
+import 'package:vaicorinthians/pages/shared/app_colors.dart';
+import 'package:vaicorinthians/pages/shared/app_text_style.dart';
 
 enum ButtonType { filled, outlined }
 

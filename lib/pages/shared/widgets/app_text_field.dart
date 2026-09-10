@@ -7,13 +7,15 @@ class AppTextField extends StatefulWidget {
     required this.hintText,
     this.obscureText = false,
     this.onChanged,
-    this.errorText,
+    this.validator,
+    this.controller,
   });
 
   final String hintText;
   final bool obscureText;
   final Function(String)? onChanged;
-  final String? errorText;
+  final String? Function(String?)? validator;
+  final TextEditingController? controller;
 
   @override
   State<AppTextField> createState() => _AppTextFieldState();
@@ -21,7 +23,6 @@ class AppTextField extends StatefulWidget {
 
 class _AppTextFieldState extends State<AppTextField> {
   late bool isObscure;
-
   @override
   initState() {
     isObscure = widget.obscureText;
@@ -36,11 +37,14 @@ class _AppTextFieldState extends State<AppTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
+      controller: widget.controller,
+      //autovalidateMode - controle a maneira que o campo é validado, nesse caso, quando o campo perde o foco
+      autovalidateMode: AutovalidateMode.onUnfocus,
       onChanged: widget.onChanged,
       obscureText: isObscure,
+      validator: widget.validator,
       decoration: InputDecoration(
-        errorText: widget.errorText,
         suffixIcon: widget.obscureText
             ? IconButton(
                 onPressed: () {
@@ -51,18 +55,20 @@ class _AppTextFieldState extends State<AppTextField> {
                     : Icon(Icons.visibility),
               )
             : null,
+
         hintText: widget.hintText,
+
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide(color: AppColors.black, width: 1.4),
+          borderSide: BorderSide(color: AppColors.grey100),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide(color: AppColors.black, width: 1.4),
+          borderSide: BorderSide(color: AppColors.grey100),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide(color: AppColors.black, width: 1.4),
+          borderSide: BorderSide(color: AppColors.grey100),
         ),
       ),
     );

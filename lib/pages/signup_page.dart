@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:vaicorinthians/features/signup/controllers/signup_controller.dart';
 import 'package:vaicorinthians/pages/shared/app_text_style.dart';
 import 'package:vaicorinthians/pages/shared/widgets/app_elevated_button.dart';
-import 'package:vaicorinthians/pages/shared/widgets/app_password_validation.dart';
 import 'package:vaicorinthians/pages/shared/widgets/app_text_field.dart';
-import 'package:vaicorinthians/pages/shared/widgets/politicas_termos.dart';
+import 'package:vaicorinthians/shared/widgets/app_check_box.dart';
+import 'package:vaicorinthians/shared/widgets/app_required_password.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
 
-  static String route = '/signup';
+  static const String route = '/signup';
 
   @override
   State<SignupPage> createState() => _SignupPageState();
@@ -17,110 +17,145 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   SignupController signupController = SignupController();
+  final GlobalKey<FormState> key = GlobalKey<FormState>();
+
+  Future<void> _handleSignup() async {
+    final isFormValid = key.currentState!.validate();
+
+    if (!signupController.validateCheckBox()) {
+      setState(() {});
+      return;
+    }
+
+    if (isFormValid && signupController.isActiveCheckBox) {
+      setState(() {
+        signupController.isLoading = true;
+      });
+
+      await signupController.signUp();
+
+      setState(() {
+        signupController.isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: const Text('Cadastro'), centerTitle: true),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Spacer(),
-              Text('Cadastro', style: AppTextStyle.title),
-              Spacer(flex: 2),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
-                child: AppTextField(
-                  hintText: 'Nome de usuário',
-                  onChanged: (value) {
-                    setState(() {
-                      signupController.setNome(value);
-                    });
-                  },
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Form(
+            key: key,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(height: 24),
+                Center(
+                  child: Text(
+                    'Criar uma conta',
+                    style: AppTextStyle.title,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
-                child: AppTextField(
-                  hintText: 'email@domínio.com',
-                  onChanged: (value) {
-                    setState(() {
-                      signupController.setEmail(value);
-                    });
-                  },
+                SizedBox(height: 8),
+                Center(
+                  child: Text(
+                    'Insira seus dados para iniciar suas compras',
+                    style: TextStyle(color: Colors.grey),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 8),
-                child: AppTextField(
-                  hintText: 'Senha',
-                  onChanged: (value) {
-                    setState(() {
-                      signupController.setSenha(value);
-                    });
-                  },
+                SizedBox(height: 32),
+                AppTextField(
+                  controller: signupController.emailController,
+                  hintText: 'email@dominio.com',
+                  validator: signupController.validateEmail,
+                ),
+                SizedBox(height: 16),
+                AppTextField(
+                  controller: signupController.nomeController,
+                  hintText: 'nome',
+                  validator: signupController.validateNome,
+                ),
+                SizedBox(height: 16),
+                AppTextField(
+                  controller: signupController.senhaController,
+                  hintText: 'senha',
+                  onChanged: (value) => setState(() {}),
+                  validator: signupController.validateSenha,
                   obscureText: true,
                 ),
-              ),
-              AppTextField(
-                hintText: 'Confirme a senha',
-                onChanged: (value) {
-                  setState(() {
-                    signupController.setConfirmPW(value);
-                  });
-                },
-                obscureText: true,
-              ),
+                SizedBox(height: 16),
+                AppTextField(
+                  controller: signupController.confirmarSenhaController,
+                  hintText: 'confirmar senha',
+                  onChanged: (value) => setState(() {}),
+                  validator: signupController.validateConfirmarSenha,
+                  obscureText: true,
+                ),
+                SizedBox(height: 16),
+                for (var requiremnt
+                    in signupController.getPasswordRequirements())
+                  AppRequiredPassword(
+                    atendido: requiremnt.values.first,
+                    text: requiremnt.keys.first,
+                  ),
 
-              AppPasswordValidation(
-                label: 'Mínimo de seis caracteres',
-                isValid: signupController.passwordLenghtValid,
-              ),
-              AppPasswordValidation(
-                label: 'Mínimo de uma letra maíscula',
-                isValid: signupController.passwordLetraMaiusculaIsValid,
-              ),
-              AppPasswordValidation(
-                label: 'Mínimo de uma letra minúscula',
-                isValid: signupController.passwordLetraMinusculaIsValid,
-              ),
-              AppPasswordValidation(
-                label: 'Mínimo de um caracter especial',
-                isValid: signupController.passwordEspecialIsValid,
-              ),
-              AppPasswordValidation(
-                label: 'As senhas conferem',
-                isValid: signupController.confirmarSenhaIsValid,
-              ),
-
-              Spacer(),
-
-              AppElevatedButton(
-                label: 'Continuar',
-                isLoading: signupController.isLoading,
-                onPressed: signupController.isActiveButton
-                    ? () async {
+                Spacer(),
+                Row(
+                  children: [
+                    AppCheckBox(
+                      isError: signupController.checkBoxError,
+                      value: signupController.isActiveCheckBox,
+                      onChanged: (value) {
                         setState(() {
-                          signupController.isLoading = true;
+                          signupController.changeActiveCheckBox();
                         });
-
-                        await signupController.signUp();
-
-                        setState(() {
-                          signupController.isLoading = false;
-                        });
-                      }
-                    : null,
-                type: ButtonType.filled,
-              ),
-              Spacer(flex: 2),
-              PoliticasTermos(),
-              Spacer(flex: 2),
-            ],
+                      },
+                    ),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          print('CLIQUEI NA LINHA');
+                        },
+                        child: RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                            style: TextStyle(color: Colors.grey),
+                            children: [
+                              TextSpan(
+                                text:
+                                    'Ao clicar em continuar, você concorda com os nossos',
+                              ),
+                              TextSpan(
+                                text: 'Termos de Serviço ',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              TextSpan(text: 'e com a '),
+                              TextSpan(
+                                text: 'Politica de Privacidade',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
+                AppElevatedButton(
+                  label: 'Continuar',
+                  isLoading: signupController.isLoading,
+                  onPressed: _handleSignup,
+                  type: ButtonType.filled,
+                ),
+                SizedBox(height: 16),
+              ],
+            ),
           ),
         ),
       ),

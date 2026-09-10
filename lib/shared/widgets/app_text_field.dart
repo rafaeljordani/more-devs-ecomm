@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:more_devs_do_zero/shared/app_colors.dart';
+import 'package:vaicorinthians/pages/shared/app_colors.dart';
 
 class AppTextField extends StatefulWidget {
   const AppTextField({

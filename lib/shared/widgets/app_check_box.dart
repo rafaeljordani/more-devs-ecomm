@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:more_devs_do_zero/shared/app_colors.dart';
+import 'package:vaicorinthians/pages/shared/app_colors.dart';
 
 class AppCheckBox extends StatelessWidget {
   const AppCheckBox({
@@ -18,7 +18,7 @@ class AppCheckBox extends StatelessWidget {
     return Checkbox(
       value: value,
       onChanged: onChanged,
-      side: isError ? BorderSide(color: AppColors.red, width: 3) : null,
+      side: isError ? BorderSide(color: AppColors.black, width: 3) : null,
     );
   }
 }

@@ -1,14 +1,14 @@
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:more_devs_do_zero/features/home/pages/home_page.dart';
-import 'package:more_devs_do_zero/features/login/controllers/login_controller.dart';
-import 'package:more_devs_do_zero/features/recover/pages/recover_page.dart';
-import 'package:more_devs_do_zero/features/signup/pages/signup_page.dart';
-import 'package:more_devs_do_zero/shared/app_text_style.dart';
-import 'package:more_devs_do_zero/shared/exceptions/auth_exception.dart';
-import 'package:more_devs_do_zero/shared/widgets/app_check_box.dart';
-import 'package:more_devs_do_zero/shared/widgets/app_elevated_button.dart';
-import 'package:more_devs_do_zero/shared/widgets/app_text_field.dart';
+import 'package:vaicorinthians/features/home/pages/home_page.dart';
+import 'package:vaicorinthians/features/login/controllers/login_controller.dart';
+import 'package:vaicorinthians/features/recover/pages/recover_page.dart';
+import 'package:vaicorinthians/features/signup/pages/signup_page.dart';
+import 'package:vaicorinthians/shared/app_text_style.dart';
+import 'package:vaicorinthians/shared/exceptions/auth_exception.dart';
+import 'package:vaicorinthians/shared/widgets/app_check_box.dart';
+import 'package:vaicorinthians/pages/shared/widgets/app_elevated_button.dart';
+import 'package:vaicorinthians/pages/shared/widgets/app_text_field.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {

@@ -1,73 +1,83 @@
+import 'package:flutter/material.dart';
+
 class SignupController {
+  final RegExp _emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+
+  TextEditingController emailController = TextEditingController();
+  TextEditingController nomeController = TextEditingController();
+  TextEditingController senhaController = TextEditingController();
+  TextEditingController confirmarSenhaController = TextEditingController();
+
+  bool checkBoxError = false;
+
   bool isActiveCheckBox = false;
-  String email = '';
-  String senha = '';
-  String nome = '';
-  String confirmarSenha = '';
-  bool isActiveButton = false;
   bool isLoading = false;
-  final _passwordLenght = 6;
-  final RegExp _passwordLetraMaiscula = RegExp(r'[A-Z]');
-  final RegExp _passwordLetraMinuscula = RegExp(r'[a-z]');
-  final RegExp _passwordEspecial = RegExp(r'[!@#$%^&*(),.?":{}|<>_\-]');
-  final RegExp _emailRegex = RegExp(
-    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-  );
+
+  List<Map<String, bool>> getPasswordRequirements() {
+    return [
+      {'Mínimo de 6 caracteres': minSeisCaracteres},
+      {'No mínimo um caracter especial': possuiCaractereEspecial},
+      {'No mínimo uma letra maiúscula': possuiLetraMaiuscula},
+      {'No mínimo uma letra minúscula': possuiLetraMinuscula},
+      {'Senhas coincidem': senhasCoincidentes},
+    ];
+  }
+
+  bool validateCheckBox() {
+    checkBoxError = !isActiveCheckBox;
+    return isActiveCheckBox;
+  }
+
+  void changeActiveCheckBox() {
+    isActiveCheckBox = !isActiveCheckBox;
+    if (isActiveCheckBox) {
+      checkBoxError = false;
+    }
+  }
 
   Future<void> signUp() async {
     await Future.delayed(Duration(seconds: 2));
   }
 
-  bool get passwordLenghtValid => senha.length >= _passwordLenght;
-
-  bool get passwordLetraMaiusculaIsValid =>
-      _passwordLetraMaiscula.hasMatch(senha.trim());
-
-  bool get passwordLetraMinusculaIsValid =>
-      _passwordLetraMinuscula.hasMatch(senha.trim());
-
-  bool get passwordEspecialIsValid => _passwordEspecial.hasMatch(senha.trim());
-
-  bool get confirmarSenhaIsValid =>
-      (confirmarSenha == senha && confirmarSenha.isNotEmpty);
-
-  bool get camposSenhaIsValid =>
-      passwordEspecialIsValid &&
-      passwordLenghtValid &&
-      passwordLetraMaiusculaIsValid &&
-      passwordLetraMinusculaIsValid;
-
-  bool get isEmailValid => _emailRegex.hasMatch(email.trim());
-
-  void setEmail(String emailParam) {
-    email = emailParam;
-    changeActiveButton();
+  String? validateEmail(String? value) {
+    if (_emailRegex.hasMatch(emailController.text.trim())) {
+      return null;
+    }
+    return 'E-mail inválido';
   }
 
-  void setSenha(String senhaParam) {
-    senha = senhaParam;
-    changeActiveButton();
+  String? validateNome(String? value) {
+    if (nomeController.text.trim().isNotEmpty) {
+      return null;
+    }
+    return 'Nome inválido';
   }
 
-  void setNome(String nomeParam) {
-    nome = nomeParam;
-    changeActiveButton();
+  String? validateSenha(String? value) {
+    if (minSeisCaracteres &&
+        possuiCaractereEspecial &&
+        possuiLetraMaiuscula &&
+        possuiLetraMinuscula) {
+      return null;
+    }
+    return 'Senha não atende aos requisitos';
   }
 
-  void setConfirmPW(String confirmPW) {
-    confirmarSenha = confirmPW;
-    changeActiveButton();
+  String? validateConfirmarSenha(String? value) {
+    if (senhasCoincidentes) {
+      return null;
+    }
+    return 'As senhas não coincidem';
   }
 
-  void changeActiveButton() {
-    isActiveButton =
-        isEmailValid &&
-        camposSenhaIsValid &&
-        nome.trim().isNotEmpty &&
-        confirmarSenha.trim().isNotEmpty;
-  }
-
-  void changeActiveCheckBox() {
-    isActiveCheckBox = !isActiveCheckBox;
-  }
+  bool get possuiLetraMaiuscula =>
+      senhaController.text.contains(RegExp(r'[A-Z]'));
+  bool get possuiLetraMinuscula =>
+      senhaController.text.contains(RegExp(r'[a-z]'));
+  bool get senhasCoincidentes =>
+      senhaController.text == confirmarSenhaController.text &&
+      senhaController.text.isNotEmpty;
+  bool get minSeisCaracteres => senhaController.text.length >= 6;
+  bool get possuiCaractereEspecial =>
+      senhaController.text.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
 }
